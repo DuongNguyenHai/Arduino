@@ -1,0 +1,3 @@
+
+#1 : fix permission of ttyUSB0
+sudo usermod -a -G dialout $USER
