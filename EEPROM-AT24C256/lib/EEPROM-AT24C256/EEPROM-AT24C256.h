@@ -1,6 +1,6 @@
 // Nguyen Hai Duong
 // Jan 9 2017
-
+// Modify date : Feb 6
 #ifndef EEPROM_AT24C256_H
 #define EEPROM_AT24C256_H
 
@@ -34,15 +34,7 @@
 #define MAX_STR 64
 #endif
 
-union _data_int {
-   char b[2];
-   int num;
-};
-
-union _data_float {
-   char b[4];
-   float num;
-};
+#define EEPROM EPROM_AT24C256
 
 class EPROM_AT24C256 {
 
@@ -63,8 +55,22 @@ public:
    unsigned int readStringUntil(unsigned int addr, char *s, char delim='\0'); // read string until meet delim. return the last address read
    unsigned int readStringBetween(unsigned int addr, char *s, char head, char tail);  // read string between two special char. return the last address read
 
+   unsigned int writeNumber(unsigned int addr, char data);
+   unsigned int writeNumber(unsigned int addr, unsigned char data);
    unsigned int writeNumber(unsigned int addr, int data);      // write number, return the last address written
+   unsigned int writeNumber(unsigned int addr, unsigned int data);
+   unsigned int writeNumber(unsigned int addr, long data);
+   unsigned int writeNumber(unsigned int addr, unsigned long data);
+   unsigned int writeNumber(unsigned int addr, float data);
+   unsigned int writeNumber(unsigned int addr, double data);
+   unsigned int readNumber(unsigned int addr, char &num);
+   unsigned int readNumber(unsigned int addr, unsigned char &num);
    unsigned int readNumber(unsigned int addr, int &num);     // read int number, return the last address read
+   unsigned int readNumber(unsigned int addr, unsigned int &num);
+   unsigned int readNumber(unsigned int addr, long &num);
+   unsigned int readNumber(unsigned int addr, unsigned long &num);
+   unsigned int readNumber(unsigned int addr, float &num);
+   unsigned int readNumber(unsigned int addr, double &num);
 
    unsigned int clear(unsigned int addr, unsigned int length); // clear bytes from addr to addr + length
 

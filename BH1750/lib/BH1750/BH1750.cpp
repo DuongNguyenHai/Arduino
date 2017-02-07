@@ -65,7 +65,11 @@ BH1750::BH1750(unsigned char addr) {
 void BH1750::begin(uint8_t mode) {
 
   // Initialize I2C
+  #if defined(ESP8266)
+  Wire.begin(ESP8266_SDA, ESP8266_SCL);
+  #else
   Wire.begin();
+  #endif
 
   // Configure sensor in specified mode
   configure(mode);
@@ -105,13 +109,7 @@ void BH1750::configure(uint8_t mode) {
       delay_ms_(10);
       break;
 
-    default:
-
-      // Invalid measurement mode
-      #ifdef BH1750_DEBUG
-        Serial.println(F("BH1750: Invalid measurment mode"));
-      #endif
-
+    default: // Invalid measurement mode
       break;
 
   }
@@ -136,20 +134,8 @@ uint16_t BH1750::readLightLevel(void) {
   level <<= 8;
   level |= read_();
 
-  // Send raw value if debug enabled
-  #ifdef BH1750_DEBUG
-    Serial.print(F("[BH1750] Raw value: "));
-    Serial.println(level);
-  #endif
-
   // Convert raw value to lux
   level /= 1.2;
-
-  // Send converted value, if debug enabled
-  #ifdef BH1750_DEBUG
-    Serial.print(F("[BH1750] Converted value: "));
-    Serial.println(level);
-  #endif
 
   return level;
 

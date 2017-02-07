@@ -55,10 +55,6 @@ unsigned int EPROM_AT24C256::printSpecial(unsigned int addr, const char *s, char
    return write(addr_af+1, tail);
 }
 
-unsigned int EPROM_AT24C256::writeNumber(unsigned int addr, int data) {
-   return write(addr, (char *) &data, 2);
-}
-
 char EPROM_AT24C256::read(unsigned int addr) {
    Wire.beginTransmission(eep_addr);
    Wire._I2C_WRITE((unsigned char)(addr >> 8)); // MSB
@@ -136,6 +132,38 @@ unsigned int EPROM_AT24C256::readStringBetween(unsigned int addr, char *s, char 
 	return n;
 }
 
+unsigned int EPROM_AT24C256::writeNumber(unsigned int addr, char data) {
+   return write(addr, data);
+}
+
+unsigned int EPROM_AT24C256::writeNumber(unsigned int addr, unsigned char data) {
+   return write(addr, data);
+}
+
+unsigned int EPROM_AT24C256::writeNumber(unsigned int addr, int data) {
+   return write(addr, (char *) &data, INT);
+}
+
+unsigned int EPROM_AT24C256::writeNumber(unsigned int addr, unsigned int data) {
+   return write(addr, (char *) &data, INT);
+}
+
+unsigned int EPROM_AT24C256::writeNumber(unsigned int addr, long data) {
+   return write(addr, (char *) &data, LONG);
+}
+
+unsigned int EPROM_AT24C256::writeNumber(unsigned int addr, unsigned long data) {
+   return write(addr, (char *) &data, LONG);
+}
+
+unsigned int EPROM_AT24C256::writeNumber(unsigned int addr, float data) {
+   return write(addr, (char *) &data, FLOAT);
+}
+
+unsigned int EPROM_AT24C256::writeNumber(unsigned int addr, double data) {
+   return write(addr, (char *) &data, DOUBLE);
+}
+
 unsigned int EPROM_AT24C256::readBytes(unsigned int addr, char *s, unsigned char size) {
    char *p = s;
    Wire.beginTransmission(eep_addr);
@@ -152,11 +180,57 @@ unsigned int EPROM_AT24C256::readBytes(unsigned int addr, char *s, unsigned char
    return addr+(s-p);
 }
 
+unsigned int EPROM_AT24C256::readNumber(unsigned int addr, char &num) {
+   unsigned int addr_af = readBytes(addr, &num, CHAR);
+   return addr_af;
+}
+
+unsigned int EPROM_AT24C256::readNumber(unsigned int addr, unsigned char &num) {
+   char n;
+   unsigned int addr_af = readBytes(addr, &n, CHAR);
+   num = (unsigned char)n;
+   return addr_af;
+}
+
 unsigned int EPROM_AT24C256::readNumber(unsigned int addr, int &num) {
-   union _data_int dt;
-   dt.num = 0;             // its really important
-   unsigned int addr_af = readBytes(addr, dt.b, INT);
-   num = dt.num;
+   char b[INT];
+   unsigned int addr_af = readBytes(addr, b, INT);
+   memcpy(&num, b, sizeof(b));
+   return addr_af;
+}
+
+unsigned int EPROM_AT24C256::readNumber(unsigned int addr, unsigned int &num) {
+   char b[INT];
+   unsigned int addr_af = readBytes(addr, b, INT);
+   memcpy(&num, b, sizeof(b));
+   return addr_af;
+}
+
+unsigned int EPROM_AT24C256::readNumber(unsigned int addr, long &num) {
+   char b[LONG];
+   unsigned int addr_af = readBytes(addr, b, INT);
+   memcpy(&num, b, sizeof(b));
+   return addr_af;
+}
+
+unsigned int EPROM_AT24C256::readNumber(unsigned int addr, unsigned long &num) {
+   char b[LONG];
+   unsigned int addr_af = readBytes(addr, b, sizeof(b));
+   memcpy(&num, b, sizeof(b));
+   return addr_af;
+}
+
+unsigned int EPROM_AT24C256::readNumber(unsigned int addr, float &num) {
+   char b[FLOAT];
+   unsigned int addr_af = readBytes(addr, b, sizeof(b));
+   memcpy(&num, b, sizeof(b));
+   return addr_af;
+}
+
+unsigned int EPROM_AT24C256::readNumber(unsigned int addr, double &num) {
+   char b[DOUBLE];
+   unsigned int addr_af = readBytes(addr, b, sizeof(b));
+   memcpy(&num, b, sizeof(b));
    return addr_af;
 }
 

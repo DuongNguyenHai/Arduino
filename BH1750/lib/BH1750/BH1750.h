@@ -22,10 +22,12 @@
   #include <WProgram.h>
 #endif
 
-#include "Wire.h"
+#include <Wire.h>
 
-// Uncomment, to enable debug messages
-// #define BH1750_DEBUG
+#if defined(ESP8266)
+#define ESP8266_SDA 2         // esp8266 ver7
+#define ESP8266_SCL 14        // esp8266 ver7
+#endif
 
 // Slave Address is 2 types
 #define ADDR_L 0x23        // supply power for addr pin with power <= 0.3*VCC (V)
