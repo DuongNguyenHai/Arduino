@@ -4,6 +4,9 @@
 
 RTC_DS3231 rtc;
 
+char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+// time setting : seconds/minutes/hours/day of week/day/month/(year-1970)
+
 char tm[22];
 
 void setup () {

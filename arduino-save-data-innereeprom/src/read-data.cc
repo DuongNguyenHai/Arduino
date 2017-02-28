@@ -38,8 +38,10 @@ void loop() {
       eead += 2;
    }
    Serial.println();
+   while(1) {
+      delay(1000);
+   }
 
-   delay(1000);
 }
 
 unsigned int index() {

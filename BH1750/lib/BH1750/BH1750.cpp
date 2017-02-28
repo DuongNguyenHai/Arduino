@@ -64,24 +64,16 @@ BH1750::BH1750(unsigned char addr) {
  */
 void BH1750::begin(uint8_t mode) {
 
-  // Initialize I2C
-  #if defined(ESP8266)
-  Wire.begin(ESP8266_SDA, ESP8266_SCL);
-  #else
-  Wire.begin();
-  #endif
+   // Initialize I2C
+   #if defined(ESP8266)
+   Wire.begin(ESP8266_SDA, ESP8266_SCL);
+   #else
+   Wire.begin();
+   #endif
 
-  // Configure sensor in specified mode
-  configure(mode);
+   // Configure sensor in specified mode
+   configure(mode);
 
-}
-
-void BH1750::powerOn() {
-   Wire.beginTransmission(BH1750_I2CADDR);
-   write_((uint8_t)BH1750_POWER_ON);
-   Wire.endTransmission();
-
-   delay_ms_(10);
 }
 
 /**
@@ -90,29 +82,27 @@ void BH1750::powerOn() {
  */
 void BH1750::configure(uint8_t mode) {
 
-  // Check, is measurment mode exist
-  switch (mode) {
+   // Check, is measurment mode exist
+   switch (mode) {
 
-    case BH1750_CONTINUOUS_HIGH_RES_MODE:
-    case BH1750_CONTINUOUS_HIGH_RES_MODE_2:
-    case BH1750_CONTINUOUS_LOW_RES_MODE:
-    case BH1750_ONE_TIME_HIGH_RES_MODE:
-    case BH1750_ONE_TIME_HIGH_RES_MODE_2:
-    case BH1750_ONE_TIME_LOW_RES_MODE:
-
+      case BH1750_CONTINUOUS_HIGH_RES_MODE: {
       // Send mode to sensor
       Wire.beginTransmission(BH1750_I2CADDR);
-      write_((uint8_t)mode);
+      Wire.write((uint8_t)mode);
       Wire.endTransmission();
 
       // Wait few moments for waking up
-      delay_ms_(10);
-      break;
+      delay_ms_(100);
+      } break;
+      case BH1750_CONTINUOUS_HIGH_RES_MODE_2:
+      case BH1750_CONTINUOUS_LOW_RES_MODE:
+      case BH1750_ONE_TIME_HIGH_RES_MODE:
+      case BH1750_ONE_TIME_HIGH_RES_MODE_2:
+      case BH1750_ONE_TIME_LOW_RES_MODE:
+      default: // Invalid measurement mode
+         break;
 
-    default: // Invalid measurement mode
-      break;
-
-  }
+   }
 
 }
 
@@ -123,20 +113,20 @@ void BH1750::configure(uint8_t mode) {
  */
 uint16_t BH1750::readLightLevel(void) {
 
-  // Measurment result will be stored here
-  uint16_t level;
+   // Measurment result will be stored here
+   uint16_t level;
 
-  // Read two bytes from sensor
-  Wire.requestFrom(BH1750_I2CADDR, 2);
+   // Read two bytes from sensor
+   Wire.requestFrom(BH1750_I2CADDR, 2);
 
-  // Read two bytes, which are low and high parts of sensor value
-  level = read_();
-  level <<= 8;
-  level |= read_();
+   // Read two bytes, which are low and high parts of sensor value
+   level = read_();
+   level <<= 8;
+   level |= read_();
 
-  // Convert raw value to lux
-  level /= 1.2;
+   // Convert raw value to lux
+   level /= 1.2;
 
-  return level;
+   return level;
 
 }

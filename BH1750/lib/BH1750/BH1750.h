@@ -65,15 +65,14 @@
 
 class BH1750 {
 
-  public:
-    BH1750 (unsigned char addr = ADDR_L);
-    void begin (uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
-    void powerOn();
-    void configure (uint8_t mode);
-    uint16_t readLightLevel(void);
+public:
+   BH1750 (unsigned char addr = ADDR_L);
+   void begin (uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
+   void configure (uint8_t mode);
+   uint16_t readLightLevel(void);
 
-  private:
-    int BH1750_I2CADDR;
+private:
+   int BH1750_I2CADDR;
 
 };
 
